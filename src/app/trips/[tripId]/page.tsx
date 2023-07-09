@@ -38,3 +38,5 @@ const TripDetails = async ({ params }: { params: { tripId: string } }) => {
         </div>
     )
 }
+
+export default TripDetails;
