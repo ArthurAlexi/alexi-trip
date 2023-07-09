@@ -6,10 +6,10 @@ import Input from "@/components/input";
 import { Trip } from "@prisma/client";
 import React from "react";
 
-interface TripReservarionProps {
+interface TripReservationProps {
     trip : Trip
 }
-const TripReservarion = ({trip} : TripReservarionProps)=>{
+const TripReservation = ({trip} : TripReservationProps)=>{
     return(
         <div className="flex flex-col px-5 ">
             <div className="flex gap-4">
@@ -28,4 +28,4 @@ const TripReservarion = ({trip} : TripReservarionProps)=>{
     )
 }
 
-export default TripReservarion;
+export default TripReservation;
