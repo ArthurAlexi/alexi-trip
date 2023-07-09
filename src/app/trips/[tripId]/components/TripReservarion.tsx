@@ -11,7 +11,7 @@ interface TripReservarionProps {
 }
 const TripReservarion = ({trip} : TripReservarionProps)=>{
     return(
-        <div className="flex flex-col px-5">
+        <div className="flex flex-col px-5 ">
             <div className="flex gap-4">
                 <DatePicker placeholderText="Start Date" onChange={()=>{}} className="w-fulll"/>
                 <DatePicker placeholderText="End Date" onChange={()=>{}} className="w-fulll"/>
@@ -21,7 +21,9 @@ const TripReservarion = ({trip} : TripReservarionProps)=>{
                 <p className="text-medium text-sm text-dark">Total: </p>
                 <p className="text-medium text-sm text-dark">R$ </p>
             </div>
-            <Button className="mt-3">Book now</Button>
+            <div className="pb-10 border-b border-grayLighter w-full">
+                <Button className="mt-3 w-full">Book now</Button>
+            </div>
         </div>
     )
 }
