@@ -18,8 +18,8 @@ const TripReservarion = ({trip} : TripReservarionProps)=>{
             </div>
             <Input placeholder={`Number of Guests (max: ${trip.maxGuests})`} className="mt-4"/>
             <div className="flex justify-between mt-3">
-                <p className="text-medium text-sm text-dark">Total: </p>
-                <p className="text-medium text-sm text-dark">R$ </p>
+                <p className="font-medium text-sm text-dark">Total: </p>
+                <p className="font-medium text-sm text-dark">R$ </p>
             </div>
             <div className="pb-10 border-b border-grayLighter w-full">
                 <Button className="mt-3 w-full">Book now</Button>
