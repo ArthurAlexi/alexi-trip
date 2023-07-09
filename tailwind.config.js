@@ -17,6 +17,7 @@ module.exports = {
         secondary : '#312A4F',
         grayPrimary : '#717171',
         grayLighter : '#BBBFBF',
+        waterWhite : "#F5F5F5"
       },
       textColor : {
         dark : '#717171'
