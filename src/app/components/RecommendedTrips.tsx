@@ -8,7 +8,7 @@ async function getTrips() {
 
     return trips;
 }
-
+// nao consegue ser chamado em client components quando há chamadas de bd
 const RecommendedTrips = async () => {
     const data = await getTrips();
     return (
