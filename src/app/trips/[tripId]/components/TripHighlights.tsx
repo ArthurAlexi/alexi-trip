@@ -1,10 +1,10 @@
 import Image from "next/image";
 import React from "react";
 
-interface TripHighlights {
+interface TripHighlightsProps {
     highlights: string[]
 }
-const TripHighlights = ({ highlights }: TripHighlights) => {
+const TripHighlights = ({ highlights }: TripHighlightsProps) => {
     return (
         <div className="flex flex-col p-5">
             <h2 className='font-medium text-secondary mb-2'>highlights</h2>
