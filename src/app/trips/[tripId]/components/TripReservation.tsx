@@ -22,9 +22,30 @@ interface TripReservationProps {
     pricePerDay: number;
 }
 const TripReservation = ({ tripId, maxGuests, tripStartDate, tripEndDate, pricePerDay }: TripReservationProps) => {
-    const { register, handleSubmit, formState: { errors } , watch, control} = useForm<TripReservationForm>()
-    const onSubmit = (data: any) => {
-
+    const { register, handleSubmit, formState: { errors }, watch, control } = useForm<TripReservationForm>()
+    const onSubmit = async (data: any) => {
+        // const response = await fetch("/api/trips/check", {
+        //     method: "POST",
+        //     body: Buffer.from(
+        //         JSON.stringify({
+        //             startDate: data.startDate,
+        //             endDate: data.endDate,
+        //             tripId,
+        //         })
+        //     ),
+        // })
+        //http://localhost:3000/trips/79798de5-9f04-4057-9030-16b2b4f75026
+        const response = await fetch("http://localhost:3000/api/trips/check", { 
+            method: "POST",
+            body: Buffer.from(
+                JSON.stringify({
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    tripId,
+                })
+            ),
+        })
+        const res = await response.json()
     }
     const startDate = watch("startDate");
     const endDate = watch("endDate");
