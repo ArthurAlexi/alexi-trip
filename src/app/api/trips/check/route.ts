@@ -1,11 +1,10 @@
-
 import { prisma } from "@/app/lib/prisma";
 import { differenceInDays, isBefore } from "date-fns";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  const req = await request.json(); // body do request
 
+export async function POST(request: Request) {
+  const req = await request.json(); // body do request  
   const trip = await prisma.trip.findUnique({
     where: {
       id: req.tripId,

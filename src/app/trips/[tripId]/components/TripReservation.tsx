@@ -3,8 +3,8 @@
 import Button from "@/components/Button";
 import DatePicker from "@/components/DatePicker";
 import Input from "@/components/input";
-import { Trip } from "@prisma/client";
 import { differenceInDays } from "date-fns";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 
@@ -22,7 +22,8 @@ interface TripReservationProps {
     pricePerDay: number;
 }
 const TripReservation = ({ tripId, maxGuests, tripStartDate, tripEndDate, pricePerDay }: TripReservationProps) => {
-    const { register, handleSubmit, formState: { errors }, watch, control } = useForm<TripReservationForm>()
+    const { register, handleSubmit, formState: { errors }, watch, control, setError } = useForm<TripReservationForm>()
+    const router = useRouter();
     const onSubmit = async (data: any) => {
         // const response = await fetch("/api/trips/check", {
         //     method: "POST",
@@ -46,6 +47,34 @@ const TripReservation = ({ tripId, maxGuests, tripStartDate, tripEndDate, priceP
             ),
         })
         const res = await response.json()
+        if(res?.error?.code === 'TRIP_ALREADY_RESERVED'){
+            setError("startDate", {
+                type: "manual",
+                message: "date already reserved"
+            })
+
+            return setError("endDate", {
+                type: "manual",
+                message: "date already reserved"
+            })
+        }
+        if (res?.error?.code === "INVALID_START_DATE") {
+            return setError("startDate", {
+              type: "manual",
+              message: "Invalid date.",
+            });
+          }
+      
+          if (res?.error?.code === "INVALID_END_DATE") {
+            return setError("endDate", {
+              type: "manual",
+              message: "Invalid date.",
+            });
+        }
+        router
+        .push(`/trips/${tripId}/confirmation?startDate=${data.startDate?.toISOString()}&endDate=${data.endDate?.toISOString()}&maxGuests=${data.maxGuests}`)
+
+
     }
     const startDate = watch("startDate");
     const endDate = watch("endDate");
@@ -98,8 +127,11 @@ const TripReservation = ({ tripId, maxGuests, tripStartDate, tripEndDate, priceP
                 />
 
             </div>
-            <Input placeholder={`Number of Guests (max: ${maxGuests})`} className="mt-4"
-                {...register('guests', { required: { value: true, message: "number of guests is required" }, })}
+            <Input placeholder={`Number of Guests (max: ${maxGuests})`} className="mt-4" type="number"
+                {...register('guests', { 
+                    required: { value: true, message: "number of guests is required" },
+                    max:{ value: maxGuests, message: `The number of guests cannot be greater than ${maxGuests}`} 
+                })}
                 error={!!errors?.guests} errorMessage={errors?.guests?.message} />
 
             <div className="flex justify-between mt-3">
