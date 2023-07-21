@@ -3,20 +3,25 @@
 import Button from "@/components/Button";
 import { Trip } from "@prisma/client";
 import { format } from "date-fns/esm";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 
 const TripConfimation = ({ params }: { params: { tripId: string } }) => {
 
     const searchParams = useSearchParams()
+    const router = useRouter()
+    const {status} = useSession()
+
     const [trip, setTrip] = useState<Trip | null>()
     const [totalPrice, setTotalPrice] = useState<number | null>()
 
     const startDate = new Date(searchParams.get("startDate") as string)
     const endDate = new Date(searchParams.get("endDate") as string)
     const guests = searchParams.get("guests")
+
     useEffect(() => {
         const fetchTrip = async () => {
             const response = await fetch("http://localhost:3000/api/trips/check", {
@@ -31,8 +36,11 @@ const TripConfimation = ({ params }: { params: { tripId: string } }) => {
             setTrip(trip)
             setTotalPrice(totalPrice)
         }
+        if(status === 'unauthenticated') {
+            router.push("/")
+        }
         fetchTrip()
-    }, [])
+    }, [status])
 
     if (!trip) return null
 
