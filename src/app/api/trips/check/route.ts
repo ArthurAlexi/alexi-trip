@@ -76,6 +76,7 @@ export async function POST(request: Request) {
       success: true,
       trip,
       totalPrice: differenceInDays(new Date(req.endDate), new Date(req.startDate)) * Number(trip.pricePerDay),
-    })
+    }),
+    {status: 200}
   );
 }

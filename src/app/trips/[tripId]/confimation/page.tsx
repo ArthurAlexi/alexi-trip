@@ -9,11 +9,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 
+
 const TripConfimation = ({ params }: { params: { tripId: string } }) => {
 
     const searchParams = useSearchParams()
     const router = useRouter()
-    const {status} = useSession()
+    const { status } = useSession()
 
     const [trip, setTrip] = useState<Trip | null>()
     const [totalPrice, setTotalPrice] = useState<number | null>()
@@ -21,6 +22,19 @@ const TripConfimation = ({ params }: { params: { tripId: string } }) => {
     const startDate = new Date(searchParams.get("startDate") as string)
     const endDate = new Date(searchParams.get("endDate") as string)
     const guests = searchParams.get("guests")
+
+
+    const handleByClick = async () => {
+        await fetch('http://localhost:3000/api/trips/reservation', {
+            method: "POST",
+            body: Buffer.from(JSON.stringify({
+                tripId: params.tripId,
+                startDate: startDate,
+                endDate: endDate,
+                guests: guests
+            }))
+        })
+    }
 
     useEffect(() => {
         const fetchTrip = async () => {
@@ -32,11 +46,16 @@ const TripConfimation = ({ params }: { params: { tripId: string } }) => {
                     endDate: searchParams.get("endDate"),
                 }),
             })
-            const { trip, totalPrice } = await response.json()
+            const res = await response.json()
+            if (res?.error) {
+                return router.push("/")
+            }
+
+            const { trip, totalPrice } = res
             setTrip(trip)
             setTotalPrice(totalPrice)
         }
-        if(status === 'unauthenticated') {
+        if (status === 'unauthenticated') {
             router.push("/")
         }
         fetchTrip()
