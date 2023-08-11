@@ -2,8 +2,9 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
+import { prisma } from "@/app/lib/prisma";
 
-import { prisma } from "../../../lib/prisma"; // aqui pode ta com erro
+
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,

@@ -8,13 +8,13 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-
+import { toast } from "react-toastify";
 
 const TripConfimation = ({ params }: { params: { tripId: string } }) => {
 
     const searchParams = useSearchParams()
     const router = useRouter()
-    const { status } = useSession()
+    const { status, data} = useSession()
 
     const [trip, setTrip] = useState<Trip | null>()
     const [totalPrice, setTotalPrice] = useState<number | null>()
@@ -24,17 +24,7 @@ const TripConfimation = ({ params }: { params: { tripId: string } }) => {
     const guests = searchParams.get("guests")
 
 
-    const handleByClick = async () => {
-        await fetch('http://localhost:3000/api/trips/reservation', {
-            method: "POST",
-            body: Buffer.from(JSON.stringify({
-                tripId: params.tripId,
-                startDate: startDate,
-                endDate: endDate,
-                guests: guests
-            }))
-        })
-    }
+    
 
     useEffect(() => {
         const fetchTrip = async () => {
@@ -59,9 +49,42 @@ const TripConfimation = ({ params }: { params: { tripId: string } }) => {
             router.push("/")
         }
         fetchTrip()
-    }, [status])
+    }, [status, searchParams, params, router])
 
+    
     if (!trip) return null
+    const handleBuyClick = async () => {
+      
+        const res = await fetch("/api/payment", {
+          method: "POST",
+          body: Buffer.from(
+            JSON.stringify({
+              tripId: params.tripId,
+              startDate: searchParams.get("startDate"),
+              endDate: searchParams.get("endDate"),
+              guests: Number(searchParams.get("guests")),
+              userId: (data!.user as any)?.id,
+              totalPrice,
+              coverImage: trip.coverImage,
+              name: trip.name,
+              description: trip.description,
+            })
+          ),
+        });
+    
+        if (!res.ok) {
+          return toast.error("Ocorreu um erro ao realizar a reserva!", { position: "bottom-center" });
+        }
+    
+        const { sessionId } = await res.json();
+    
+        // const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY as string);
+    
+        // await stripe?.redirectToCheckout({ sessionId });
+        
+        router.push('/')
+        toast.success("Reserva realizada com sucesso!", { position: "bottom-center" });
+      };
 
     return (
         <div className="container mx-auto">
@@ -99,7 +122,7 @@ const TripConfimation = ({ params }: { params: { tripId: string } }) => {
             <h3 className="mt-1">guests</h3>
             <p>{guests} guests</p>
 
-            <Button className="mt-5">checkout</Button>
+            <Button className="mt-5" onClick={handleBuyClick}>checkout</Button>
         </div>
     )
 }
