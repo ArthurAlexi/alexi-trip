@@ -132,7 +132,8 @@ const TripReservation = ({ tripId, maxGuests, tripStartDate, tripEndDate, priceP
                     required: { value: true, message: "number of guests is required" },
                     max:{ value: maxGuests, message: `The number of guests cannot be greater than ${maxGuests}`} 
                 })}
-                error={!!errors?.guests} errorMessage={errors?.guests?.message} />
+                error={!!errors?.guests} errorMessage={errors?.guests?.message} 
+            />
 
             <div className="flex justify-between mt-3">
                 <p className="font-medium text-sm text-dark">Total: </p>
